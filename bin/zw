@@ -1,0 +1,20 @@
+#!/data/data/com.termux/files/usr/bin/bash
+ZW_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CONF="$ZW_HOME/projects.conf"
+case "$1" in
+  add)
+    echo "$2=$3" >> "$CONF"
+    echo "已添加: $2 -> $3"
+    ;;
+  list)
+    echo "已注册项目:"; cat "$CONF"
+    ;;
+  run)
+    P=$(grep "^$2=" "$CONF" | cut -d= -f2)
+    [ -z "$P" ] && echo "未找到别名: $2" && exit 1
+    bash "$ZW_HOME/core/snapshot.sh" "$P" "$2"
+    ;;
+  *)
+    echo "用法: zw add <别名> <路径> | zw list | zw run <别名>"
+    ;;
+esac
