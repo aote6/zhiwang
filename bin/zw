@@ -14,7 +14,14 @@ case "$1" in
     [ -z "$P" ] && echo "未找到别名: $2" && exit 1
     bash "$ZW_HOME/core/snapshot.sh" "$P" "$2"
     ;;
+  all)
+    while IFS='=' read -r name path; do
+      [ -z "$name" ] && continue
+      bash "$ZW_HOME/core/snapshot.sh" "$path" "$name"
+      echo ""
+    done < "$CONF"
+    ;;
   *)
-    echo "用法: zw add <别名> <路径> | zw list | zw run <别名>"
+    echo "用法: zw add <别名> <路径> | zw list | zw run <别名> | zw all"
     ;;
 esac
