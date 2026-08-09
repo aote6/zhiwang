@@ -11,6 +11,7 @@ find . \( \
   -path './node_modules' -o \
   -path './.patches' -o \
   -path './build' -o \
-  -path './.smsrepo' \
+  -path './.smsrepo' -o \
+  -path './.forge' \
 \) -prune -o \( -name "*.java" -o -name "*.py" -o -name "*.json" \) -type f -print | sort
 echo ""
