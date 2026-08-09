@@ -1,2 +1,4 @@
 *.bak
 state/*.last_snapshot
+__pycache__/
+*.pyc

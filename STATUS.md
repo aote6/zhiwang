@@ -50,3 +50,16 @@
 2. 如果要新增collector，新建一个 collectors/编号_名称.sh 文件即可，不改 core/snapshot.sh，也不改已有collector。
 3. 如果要新增项目，用 zw add，不要手改 projects.conf 之外的任何文件。
 4. 写本文件或任何蛛网脚本时，优先用Python脚本三引号字符串分段写入，不要用长heredoc直接塞中文段落，避免粘贴截断。
+
+## 2026-08-09 06_file_tree.sh 修复
+
+- **问题**：Forge 项目快照 file_tree 膨胀（886个文件），因为 .forge 目录未被排除，导致 Planner prompt 超过 32000 字符。
+- **修复**：06_file_tree.sh 新增 `-path './.forge'` 排除规则。
+- **结果**：Forge 项目 file_tree 从 886 降至 124。
+- **定位**：zhiwang 职责是"全量呈现项目现状"，不做任务相关性筛选——后者是调用方（Forge Planner）的职责。
+
+## 2026-08-09 06_file_tree.sh 重构：从手动排除改为 git ls-files
+
+- **之前**：`find` + 手动 `-prune` 排除列表（`.git`/`.forge`/`__pycache__` 等），每个项目新增噪音目录需手动加规则。
+- **现在**：优先使用 `git ls-files`，自动遵从项目 `.gitignore`。非 git 仓库退化到 `find` + 基础排除。
+- **效果**：排除规则的权威从 zhiwang 转移到各项目自己的 `.gitignore`，不再需要跨项目同步维护排除列表。
